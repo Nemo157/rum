@@ -240,8 +240,11 @@ struct StdConsole(Stdout, Stdin);
 impl Console for StdConsole {
     fn input(&mut self) -> Platter {
         let mut buf = [0];
-        assert_eq!(self.1.read(&mut buf).unwrap(), 1);
-        Platter(buf[0] as u32)
+        if self.1.read(&mut buf).unwrap() == 1 {
+            Platter(buf[0] as u32)
+        } else {
+            Platter(0xFFFFFFFF)
+        }
     }
 
     fn output(&mut self, character: Platter) {
